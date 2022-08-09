@@ -677,6 +677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 300
+  shootRate: 1.25
   bulletSpanwPoint: {fileID: 1064488985}
   bulletPrefab: {fileID: 8643123124372188366, guid: 5a4de4cc570993a48a12759ee796ccec, type: 3}
 --- !u!1 &963194225

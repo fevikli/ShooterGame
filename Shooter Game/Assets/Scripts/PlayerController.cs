@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
 
     // variables
     public float speed;
+    public float shootRate;
+    private float shootCooldown;
     private float verticalInput;
     private float horizontalInput;
     private Vector3 velocityOfPlayer;
@@ -35,22 +37,15 @@ public class PlayerController : MonoBehaviour
 
         bulletSpawnOffset = new Vector3(0, 2, 1.5f);
 
+        shootCooldown = 0;
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-
-
-        // look toward mouse position
-        Vector3 mouseWorldPosition = gameCam.ScreenToWorldPoint(Input.mousePosition + Vector3.forward * 15f);
-        float angleBetween = 270 - Mathf.Atan2(transform.position.z - mouseWorldPosition.z, transform.position.x - mouseWorldPosition.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0f, angleBetween, 0f));
-
-
+        LookTowardMouse();
 
         Shoot();
 
@@ -66,13 +61,37 @@ public class PlayerController : MonoBehaviour
 
     private void Shoot()
     {
-        
+
+        shootCooldown += Time.deltaTime;
+
+        if (shootCooldown > shootRate)
+        {
+
             if (Input.GetMouseButton(0))
             {
 
                 Instantiate(bulletPrefab, bulletSpanwPoint.position, transform.rotation);
-                
+
             }
 
+            shootCooldown = 0;
+        }
+
     }
+
+    void LookTowardMouse()
+    {
+
+        // get input frm player
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
+
+
+        // look toward mouse position
+        Vector3 mouseWorldPosition = gameCam.ScreenToWorldPoint(Input.mousePosition + Vector3.forward * 15f);
+        float angleBetween = 270 - Mathf.Atan2(transform.position.z - mouseWorldPosition.z, transform.position.x - mouseWorldPosition.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(new Vector3(0f, angleBetween, 0f));
+
+    }
+
 }
