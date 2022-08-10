@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
         bulletSpawnOffset = new Vector3(0, 2, 1.5f);
 
-        shootCooldown = 0;
+
 
     }
 
@@ -47,7 +47,21 @@ public class PlayerController : MonoBehaviour
 
         LookTowardMouse();
 
-        Shoot();
+
+        if (shootCooldown > 0f)
+        {
+            shootCooldown -= Time.deltaTime;
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+
+            if (shootCooldown <= 0)
+            {
+                Shoot();
+            }
+
+        }
 
     }
 
@@ -61,21 +75,9 @@ public class PlayerController : MonoBehaviour
 
     private void Shoot()
     {
+        shootCooldown = shootRate;
 
-        shootCooldown += Time.deltaTime;
-
-        if (shootCooldown > shootRate)
-        {
-
-            if (Input.GetMouseButton(0))
-            {
-
-                Instantiate(bulletPrefab, bulletSpanwPoint.position, transform.rotation);
-
-            }
-
-            shootCooldown = 0;
-        }
+        Instantiate(bulletPrefab, bulletSpanwPoint.position, transform.rotation);
 
     }
 

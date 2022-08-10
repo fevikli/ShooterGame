@@ -46,7 +46,7 @@ public class BulletMove : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         
-        if(collision.gameObject.CompareTag("Wall"))
+        if(collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Enemy"))
         {
             Destroy(gameObject);
         }
