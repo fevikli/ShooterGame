@@ -10,6 +10,9 @@ public class FighterEnemyController : MonoBehaviour
     // variable
     public float speed;
     public float attackSpeed;
+    public float currentHealth;
+    public float maxHealth;
+    public bool isGameRunning;
     private float attackTimer;
     private Vector3 velocityOfEnemy;
     // end of variabless
@@ -30,10 +33,12 @@ public class FighterEnemyController : MonoBehaviour
     {
 
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>();        
         enemyRb = GetComponent<Rigidbody>();
-
+        isGameRunning = playerControllerScript.isGameRunning;
         attackTimer = attackSpeed;
+
+        currentHealth = maxHealth;
 
     }
 
@@ -41,25 +46,40 @@ public class FighterEnemyController : MonoBehaviour
     void Update()
     {
 
+        isGameRunning = playerControllerScript.isGameRunning;
 
-        if(attackTimer > 0)
+        if (isGameRunning)
         {
-            attackTimer -= Time.deltaTime;
+            if (attackTimer > 0)
+            {
+                attackTimer -= Time.deltaTime;
+            }
         }
+
+
     }
 
     private void FixedUpdate()
     {
+        if (isGameRunning)
+        {
+            velocityOfEnemy = transform.forward * speed * Time.fixedDeltaTime;
+            enemyRb.velocity = velocityOfEnemy;
 
-        velocityOfEnemy = transform.forward * speed * Time.fixedDeltaTime;
-        enemyRb.velocity = velocityOfEnemy;
+            float angleBetween = 270 - Mathf.Atan2(transform.position.z - playerTransform.position.z, transform.position.x - playerTransform.position.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(new Vector3(0f, angleBetween, 0f));
+        }
+        else
+        {
 
-        float angleBetween = 270 - Mathf.Atan2(transform.position.z - playerTransform.position.z, transform.position.x - playerTransform.position.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0f, angleBetween, 0f));
+            enemyRb.velocity = Vector3.zero;
+            enemyRb.angularVelocity = Vector3.zero;
+
+        }
 
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -71,6 +91,30 @@ public class FighterEnemyController : MonoBehaviour
             }
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        
+        if(collision.gameObject.CompareTag("Bullet"))
+        {
+
+            GetDamege(20);
+
+        }
+    }
+
+    public void GetDamege(int damage)
+    {
+
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+
+    }
+
 }
 
 
