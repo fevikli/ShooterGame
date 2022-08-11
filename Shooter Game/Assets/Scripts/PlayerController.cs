@@ -9,9 +9,11 @@ public class PlayerController : MonoBehaviour
     // variables
     public float speed;
     public float shootRate;
-    public float currentHealth;
-    public float maxHealth;
+    public int currentHealth;
+    public int maxHealth;
     public bool isGameRunning;
+    public int score;
+    public int highScore;
     private float shootCooldown;
     private float verticalInput;
     private float horizontalInput;
@@ -27,10 +29,11 @@ public class PlayerController : MonoBehaviour
     // game objects
     private Camera gameCam;
     public GameObject bulletPrefab;
+    public GameObject gameOverPanel;
     // end of game objects
 
     // claseses
-
+    public UIManager UIManagerScript;
     // end of classes
 
 
@@ -43,9 +46,16 @@ public class PlayerController : MonoBehaviour
 
         gameCam = Camera.main;
 
+        maxHealth = 100;
         currentHealth = maxHealth;
 
         isGameRunning = true;
+
+        gameOverPanel.SetActive(false);
+
+
+        score = 0;
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
 
 
 
@@ -60,6 +70,7 @@ public class PlayerController : MonoBehaviour
 
             LookTowardMouse();
 
+            UIManagerScript.SetHealth(currentHealth);
 
             if (shootCooldown > 0f)
             {
@@ -81,6 +92,8 @@ public class PlayerController : MonoBehaviour
                 isGameRunning = false;
                 playerRb.velocity = Vector3.zero;
                 playerRb.angularVelocity = Vector3.zero;
+
+                gameOverPanel.SetActive(true);
 
                 Debug.Log("Game Over");
             }
@@ -128,22 +141,41 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void GetDamage(float damage)
+    public void GetDamage(int damage)
     {
 
         currentHealth -= damage;
         Debug.Log("Health : " + currentHealth);
 
-        if(currentHealth <= 0)
+        
+
+        if (currentHealth <= 0)
         {
             isGameRunning = false;
             playerRb.velocity = Vector3.zero;
             playerRb.angularVelocity = Vector3.zero;
 
+            gameOverPanel.SetActive(true);
+
             Debug.Log("Game Over");
         }
 
     }
+
+    public void AddScore(int scoreAmount)
+    {
+
+        score += scoreAmount;
+        Debug.Log("score added");
+        if(score > highScore)
+        {
+
+            PlayerPrefs.SetInt("HighScore", score);
+
+        }
+
+    }
+
 
 }
 

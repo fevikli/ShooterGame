@@ -111,6 +111,8 @@ public class FighterEnemyController : MonoBehaviour
         if (currentHealth <= 0)
         {
             Destroy(gameObject);
+
+            playerControllerScript.AddScore(1);
         }
 
     }
