@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
@@ -10,8 +11,8 @@ public class FighterEnemyController : MonoBehaviour
     // variable
     public float speed;
     public float attackSpeed;
-    public float currentHealth;
-    public float maxHealth;
+    public int currentHealth;
+    public int maxHealth;
     public bool isGameRunning;
     private float attackTimer;
     private Vector3 velocityOfEnemy;
@@ -22,6 +23,11 @@ public class FighterEnemyController : MonoBehaviour
     private Rigidbody enemyRb;
     public Transform playerTransform;
     //end of componenets
+
+
+    // game objects
+    public Slider EnemyHealthBarSlider;
+    // end of game objects
 
 
     // classes
@@ -38,7 +44,9 @@ public class FighterEnemyController : MonoBehaviour
         isGameRunning = playerControllerScript.isGameRunning;
         attackTimer = attackSpeed;
 
+        maxHealth = 100;
         currentHealth = maxHealth;
+        SetMaxHealth(maxHealth);
 
     }
 
@@ -50,6 +58,11 @@ public class FighterEnemyController : MonoBehaviour
 
         if (isGameRunning)
         {
+
+            SetHealth(currentHealth);
+
+            //EnemyHealthBarSlider.value = 10;
+
             if (attackTimer > 0)
             {
                 attackTimer -= Time.deltaTime;
@@ -114,6 +127,22 @@ public class FighterEnemyController : MonoBehaviour
 
             playerControllerScript.AddScore(1);
         }
+
+    }
+
+
+    public void SetMaxHealth(int health)
+    {
+
+        EnemyHealthBarSlider.maxValue = health;
+        EnemyHealthBarSlider.value = health;
+
+    }
+
+    public void SetHealth(int health)
+    {
+
+        EnemyHealthBarSlider.value = health;
 
     }
 
