@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     // components
     private Rigidbody playerRb;
     public Transform bulletSpanwPoint;
+    public Animator playerAnimator;
     // end of components
 
     // game objects
@@ -48,11 +49,13 @@ public class PlayerController : MonoBehaviour
 
         maxHealth = 100;
         currentHealth = maxHealth;
+        UIManagerScript.SetMaxHealth(maxHealth);
 
         isGameRunning = true;
 
         gameOverPanel.SetActive(false);
 
+        playerAnimator = GetComponent<Animator>();
 
         score = 0;
         highScore = PlayerPrefs.GetInt("HighScore", 0);
@@ -93,6 +96,8 @@ public class PlayerController : MonoBehaviour
                 playerRb.velocity = Vector3.zero;
                 playerRb.angularVelocity = Vector3.zero;
 
+                playerAnimator.SetBool("isDead",true);
+
                 gameOverPanel.SetActive(true);
 
                 Debug.Log("Game Over");
@@ -109,6 +114,9 @@ public class PlayerController : MonoBehaviour
         {
             velocityOfPlayer = new Vector3(horizontalInput * speed * Time.fixedDeltaTime, 0f, verticalInput * speed * Time.fixedDeltaTime);
             playerRb.velocity = velocityOfPlayer;
+
+            playerAnimator.SetFloat("Speed", playerRb.velocity.magnitude);
+
         }
         else
         {
@@ -120,6 +128,9 @@ public class PlayerController : MonoBehaviour
 
     private void Shoot()
     {
+
+        playerAnimator.SetTrigger("Shoot");
+
         shootCooldown = shootRate;
 
         Instantiate(bulletPrefab, bulletSpanwPoint.position, transform.rotation);
@@ -144,6 +155,8 @@ public class PlayerController : MonoBehaviour
     public void GetDamage(int damage)
     {
 
+        playerAnimator.SetTrigger("GetDamage");
+
         currentHealth -= damage;
         Debug.Log("Health : " + currentHealth);
 
@@ -154,6 +167,8 @@ public class PlayerController : MonoBehaviour
             isGameRunning = false;
             playerRb.velocity = Vector3.zero;
             playerRb.angularVelocity = Vector3.zero;
+
+            playerAnimator.SetBool("isDead", true);
 
             gameOverPanel.SetActive(true);
 

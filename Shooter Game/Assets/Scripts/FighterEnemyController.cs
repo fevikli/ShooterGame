@@ -22,6 +22,7 @@ public class FighterEnemyController : MonoBehaviour
     // components
     private Rigidbody enemyRb;
     public Transform playerTransform;
+    public Animator enemyAnimator;
     //end of componenets
 
 
@@ -39,14 +40,19 @@ public class FighterEnemyController : MonoBehaviour
     {
 
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-        playerTransform = GameObject.Find("Player").GetComponent<Transform>();        
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>();
+       
+
         enemyRb = GetComponent<Rigidbody>();
         isGameRunning = playerControllerScript.isGameRunning;
         attackTimer = attackSpeed;
 
+
         maxHealth = 100;
         currentHealth = maxHealth;
-        SetMaxHealth(maxHealth);
+
+        enemyAnimator = GetComponent<Animator>();
+        
 
     }
 
@@ -61,7 +67,6 @@ public class FighterEnemyController : MonoBehaviour
 
             SetHealth(currentHealth);
 
-            //EnemyHealthBarSlider.value = 10;
 
             if (attackTimer > 0)
             {
@@ -94,11 +99,16 @@ public class FighterEnemyController : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
+        
+
         if (collision.gameObject.CompareTag("Player"))
         {
 
             if (attackTimer <= 0)
             {
+
+                enemyAnimator.SetTrigger("Punch");
+
                 playerControllerScript.GetDamage(15);
                 attackTimer = attackSpeed;
             }
