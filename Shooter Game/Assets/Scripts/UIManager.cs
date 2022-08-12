@@ -70,6 +70,8 @@ public class UIManager : MonoBehaviour
 
     }
 
+
+
     // Game Over panel
     public void StartGame()
     {

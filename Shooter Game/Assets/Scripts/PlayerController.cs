@@ -60,6 +60,8 @@ public class PlayerController : MonoBehaviour
         score = 0;
         highScore = PlayerPrefs.GetInt("HighScore", 0);
 
+        //PlayerPrefs.SetInt("HighScore", 0);
+
 
 
     }
@@ -97,6 +99,15 @@ public class PlayerController : MonoBehaviour
                 playerRb.angularVelocity = Vector3.zero;
 
                 playerAnimator.SetBool("isDead",true);
+
+
+                if (score > highScore)
+                {
+
+                    PlayerPrefs.SetInt("HighScore", score);
+
+                }
+
 
                 gameOverPanel.SetActive(true);
 
@@ -170,6 +181,15 @@ public class PlayerController : MonoBehaviour
 
             playerAnimator.SetBool("isDead", true);
 
+
+            if (score > highScore)
+            {
+
+
+                highScore = score;
+
+            }
+
             gameOverPanel.SetActive(true);
 
             Debug.Log("Game Over");
@@ -191,6 +211,19 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void AddHealth(int health)
+    {
+
+        currentHealth += health;
+
+        if (currentHealth > 100)
+        {
+            currentHealth = 100;
+        }
+
+        UIManagerScript.SetHealth(currentHealth);
+
+    }
 
 }
 

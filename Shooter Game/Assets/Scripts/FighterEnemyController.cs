@@ -14,6 +14,8 @@ public class FighterEnemyController : MonoBehaviour
     public int currentHealth;
     public int maxHealth;
     public bool isGameRunning;
+    public bool[] probabilityArray;
+    public int persantageInput;
     private float attackTimer;
     private Vector3 velocityOfEnemy;
     // end of variabless
@@ -28,6 +30,7 @@ public class FighterEnemyController : MonoBehaviour
 
     // game objects
     public Slider EnemyHealthBarSlider;
+    public GameObject healUpPrefab;
     // end of game objects
 
 
@@ -41,7 +44,7 @@ public class FighterEnemyController : MonoBehaviour
 
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
-       
+
 
         enemyRb = GetComponent<Rigidbody>();
         isGameRunning = playerControllerScript.isGameRunning;
@@ -52,7 +55,7 @@ public class FighterEnemyController : MonoBehaviour
         currentHealth = maxHealth;
 
         enemyAnimator = GetComponent<Animator>();
-        
+
 
     }
 
@@ -72,6 +75,12 @@ public class FighterEnemyController : MonoBehaviour
             {
                 attackTimer -= Time.deltaTime;
             }
+        }
+        else
+        {
+
+            enemyAnimator.SetBool("Victory", true);
+
         }
 
 
@@ -99,7 +108,7 @@ public class FighterEnemyController : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        
+
 
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -117,8 +126,8 @@ public class FighterEnemyController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        
-        if(collision.gameObject.CompareTag("Bullet"))
+
+        if (collision.gameObject.CompareTag("Bullet"))
         {
 
             GetDamege(20);
@@ -133,7 +142,18 @@ public class FighterEnemyController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+
+            if (Probability(persantageInput))
+            {
+
+                Vector3 spawnPos = new Vector3(transform.position.x, 0.8f, transform.position.z);
+
+                Instantiate(healUpPrefab, spawnPos, healUpPrefab.transform.rotation);
+
+            }
+
             Destroy(gameObject);
+
 
             playerControllerScript.AddScore(1);
         }
@@ -154,6 +174,38 @@ public class FighterEnemyController : MonoBehaviour
 
         EnemyHealthBarSlider.value = health;
 
+    }
+
+
+
+    // this method returns 40% "true" value for heal ups spawn probability
+    public bool Probability(int persantage)
+    {
+
+        probabilityArray = new bool[10];
+        int loop = persantage / 10;
+
+        for (int i = 0; i < loop; i++)
+        {
+
+            probabilityArray[i] = true;
+
+        }
+
+        for (int i = loop; i < probabilityArray.Length; i++)
+        {
+
+            probabilityArray[i] = false;
+
+        }
+
+
+        //bool[] probabilityArray = { false, false, false, false, false, false, true, true, true, true };
+
+        int arrayIndex = Random.Range(0, probabilityArray.Length);
+        bool randomSatate = probabilityArray[arrayIndex];
+
+        return randomSatate;
     }
 
 }
