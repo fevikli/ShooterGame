@@ -29,7 +29,7 @@ public class FighterEnemyController : MonoBehaviour
 
 
     // game objects
-    public Slider EnemyHealthBarSlider;
+    public Slider enemyHealthBarSlider;
     public GameObject healUpPrefab;
     // end of game objects
 
@@ -164,15 +164,15 @@ public class FighterEnemyController : MonoBehaviour
     public void SetMaxHealth(int health)
     {
 
-        EnemyHealthBarSlider.maxValue = health;
-        EnemyHealthBarSlider.value = health;
+        enemyHealthBarSlider.maxValue = health;
+        enemyHealthBarSlider.value = health;
 
     }
 
     public void SetHealth(int health)
     {
 
-        EnemyHealthBarSlider.value = health;
+        enemyHealthBarSlider.value = health;
 
     }
 

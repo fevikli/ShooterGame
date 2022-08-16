@@ -1729,7 +1729,7 @@ MonoBehaviour:
   maxHealth: 100
   isGameRunning: 0
   probabilityArray: 
-  persantageInput: 60
+  persantageInput: 40
   playerTransform: {fileID: 0}
   enemyAnimator: {fileID: 0}
   EnemyHealthBarSlider: {fileID: 8092154050013096413}
